@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="chatbot_allowed_model_view_list" model="ir.ui.view">
+        <field name="name">chatbot.allowed.model.list</field>
+        <field name="model">chatbot.allowed.model</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="default_field_names"/>
+                <field name="is_available"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="chatbot_allowed_model_view_form" model="ir.ui.view">
+        <field name="name">chatbot.allowed.model.form</field>
+        <field name="model">chatbot.allowed.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="model_name"/>
+                        <field name="default_field_names"/>
+                        <field name="is_available"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="chatbot_allowed_model_action" model="ir.actions.act_window">
+        <field name="name">Chatbot Models</field>
+        <field name="res_model">chatbot.allowed.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Temporary. We move it under the chatbot root menu -->
+    <menuitem id="chatbot_allowed_model_menu"
+              name="Chatbot Models"
+              parent="base.menu_custom"
+              action="chatbot_allowed_model_action"
+              groups="odoo_chatbot.group_chatbot_manager"
+              sequence="50"/>
+</odoo>

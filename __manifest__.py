@@ -9,9 +9,9 @@
     'depends': ['base', 'web'],
     'data': [
         'security/security.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
+        'security/ir.access.csv',
         'data/chatbot_allowed_model_data.xml',
+        'views/chatbot_allowed_model_views.xml',
         'views/chatbot_client_action.xml',
         'views/res_config_settings_views.xml',
         'views/chatbot_menus.xml',

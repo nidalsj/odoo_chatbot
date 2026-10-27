@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-    
-
+<odoo noupdate="1">
+    <record id="allowed_model_sale_order" model="chatbot.allowed.model">
+        <field name="name">Sales Orders</field>
+        <field name="model_name">sale.order</field>
+        <field name="default_field_names">name,date_order,partner_id,amount_total,state</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="allowed_model_purchase_order" model="chatbot.allowed.model">
+        <field name="name">Purchase Orders</field>
+        <field name="model_name">purchase.order</field>
+        <field name="default_field_names">name,date_order,partner_id,amount_total,state</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="allowed_model_account_move" model="chatbot.allowed.model">
+        <field name="name">Invoices and Journal Entries</field>
+        <field name="model_name">account.move</field>
+        <field name="default_field_names">name,invoice_date,partner_id,amount_total,payment_state</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="allowed_model_res_partner" model="chatbot.allowed.model">
+        <field name="name">Contacts</field>
+        <field name="model_name">res.partner</field>
+        <field name="default_field_names">name,email,phone,city,country_id</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="allowed_model_product_product" model="chatbot.allowed.model">
+        <field name="name">Products</field>
+        <field name="model_name">product.product</field>
+        <field name="default_field_names">name,default_code,list_price,standard_price</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="allowed_model_pos_order" model="chatbot.allowed.model">
+        <field name="name">POS Orders</field>
+        <field name="model_name">pos.order</field>
+        <field name="default_field_names">name,date_order,partner_id,amount_total,state</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="allowed_model_crm_lead" model="chatbot.allowed.model">
+        <field name="name">CRM Leads and Opportunities</field>
+        <field name="model_name">crm.lead</field>
+        <field name="default_field_names">name,partner_id,expected_revenue,stage_id,user_id</field>
+        <field name="sequence">70</field>
+    </record>
 </odoo>
