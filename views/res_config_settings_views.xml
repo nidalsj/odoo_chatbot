@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    
-
+    <record id="res_config_settings_view_form_odoo_chatbot" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo_chatbot</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="AI Chatbot" string="AI Chatbot" name="odoo_chatbot"
+                     groups="base.group_system">
+                    <block title="AI Engine" name="chatbot_engine_block">
+                        <setting string="AI Provider"
+                                 help="Choosing a provider fills in a suggested Base URL and Model ID.">
+                            <field name="chatbot_provider"/>
+                        </setting>
+                        <setting string="Connection Details"
+                                 help="Free-tier model IDs change over time. Use Test Connection to confirm yours still works.">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="chatbot_base_url" class="col-lg-3"/>
+                                    <field name="chatbot_base_url"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="chatbot_model_id" class="col-lg-3"/>
+                                    <field name="chatbot_model_id"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="chatbot_api_key" class="col-lg-3"/>
+                                    <field name="chatbot_api_key" password="True" autocomplete="off"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Integrated Connectivity Test"
+                                 help="Checks that your API key and Model ID are valid, using the values currently in the form.
+                                  (Not the saved values, so you can test before saving)">
+                            <button name="action_chatbot_test_connection" type="object"
+                                    string="Test Connection" class="btn-primary"/>
+                        </setting>
+                    </block>
+                    <block title="Generation and Limits" name="chatbot_limits_block">
+                        <setting string="Generation"
+                                 help="Temperature 0 gives the most predictable query output.">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="chatbot_temperature" class="col-lg-3"/>
+                                    <field name="chatbot_temperature"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="chatbot_max_tokens" class="col-lg-3"/>
+                                    <field name="chatbot_max_tokens"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="chatbot_timeout" class="col-lg-3"/>
+                                    <field name="chatbot_timeout"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Usage Limits"
+                                 help="Row cap per answer and a per-user daily request cap, to protect free quotas.">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="chatbot_max_rows" class="col-lg-3"/>
+                                    <field name="chatbot_max_rows"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="chatbot_daily_cap" class="col-lg-3"/>
+                                    <field name="chatbot_daily_cap"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
 </odoo>
