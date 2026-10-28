@@ -6,7 +6,7 @@
     'author': 'Nidal SJ',
     'website': 'nidalsj.vercel.app',
     'license': 'LGPL-3',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web','account', 'sale', 'purchase', 'stock', 'crm'],
     'data': [
         'security/security.xml',
         'security/ir.access.csv',
