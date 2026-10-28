@@ -3,8 +3,9 @@ from dataclasses import dataclass
 PARAM_PREFIX = 'odoo_chatbot.'
 DEFAULT_PROVIDER = 'groq'
 
-# Free-tier model IDs rotate, so treat these as suggestions. Test Connection
+# Models used in free tiers may change so this is just a seggestion.
 # will tell you if one has been retired.
+# If you face validation errors, check the provider's docs for the latest model names
 PRESETS = {
     'groq': {
         'base_url': 'https://api.groq.com/openai/v1',
@@ -35,13 +36,11 @@ class AIConfig:
 
 
 def load_config(env):
-    """Read the saved settings. sudo() is required: only admins may read
-    ir.config_parameter directly, but the chatbot runs as normal users."""
     icp = env['ir.config_parameter'].sudo()
 
     def get(key, default):
-        value = icp.get_param(PARAM_PREFIX + key)
-        return default if value in (None, False, '') else value
+        value = icp.get_str(PARAM_PREFIX + key)
+        return value if value else default
 
     provider = get('provider', DEFAULT_PROVIDER)
     preset = PRESETS.get(provider, {})

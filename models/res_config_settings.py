@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-from ..services.config import PRESETS, AIConfig
+from ..services.config import PRESETS, AIConfig, load_config
 from ..services.providers import ProviderError, build_provider
 
 
@@ -45,8 +45,13 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('chatbot_provider')
     def _onchange_chatbot_provider(self):
+        saved = load_config(self.env)
+        if self.chatbot_provider == saved.provider:
+            self.chatbot_base_url = saved.base_url
+            self.chatbot_model_id = saved.model_id
+            return
         preset = PRESETS.get(self.chatbot_provider)
-        if preset:  # custom has no preset so keep whatever the admin typed
+        if preset:  # custom has no preset: keep whatever the admin typed
             self.chatbot_base_url = preset['base_url']
             self.chatbot_model_id = preset['model_id']
 

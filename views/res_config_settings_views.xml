@@ -32,8 +32,7 @@
                             </div>
                         </setting>
                         <setting string="Integrated Connectivity Test"
-                                 help="Checks that your API key and Model ID are valid, using the values currently in the form.
-                                  (Not the saved values, so you can test before saving)">
+                                 help="Checks that your API key and Model ID are valid, using the values currently in the form.">
                             <button name="action_chatbot_test_connection" type="object"
                                     string="Test Connection" class="btn-primary"/>
                         </setting>
