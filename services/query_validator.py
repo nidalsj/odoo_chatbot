@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field as dc_field
 from zoneinfo import ZoneInfo
 from odoo import fields as odoo_fields
-from .date_resolver import resolve_between, resolve_period, to_utc_naive
+from .date_resolver import resolve_between, resolve_period, to_utc_naive, user_tz
 from .errors import QueryError
 
 UNREADABLE = "I couldn't understand that request. Could you rephrase it?"
@@ -54,7 +54,7 @@ def validate_spec(env, spec, schema, max_rows):
         raise QueryError(NOT_AVAILABLE)
     info = schema[model_name]['fields']
     today = odoo_fields.Date.context_today(env.user)
-    tz = _user_tz(env)
+    tz = user_tz(env)
 
     domain = []
     for flt in _items(spec.get('filters'), MAX_FILTERS):
@@ -92,13 +92,6 @@ def validate_spec(env, spec, schema, max_rows):
 # FOLLOWING FUNCTION ARE SOME HELPERS FOR VALIDATE_SPEC, NOT USED OUTSIDE THIS FILE
 # THIS IS VERY IMPORTANT: DO NOT CHANGE THEM WITHOUT TESTING, THEY ARE THE CORE OF THE QUERY VALIDATION
 # AFTER CHANGING THEM, RUN THE TESTS IN odoo_chatbot/tests/test_query_pipeline.py TO MAKE SURE THEY STILL WORK
-
-def _user_tz(env):
-    name = env.context.get('tz') or env.user.tz or 'UTC'
-    try:
-        return ZoneInfo(name)
-    except (KeyError, ValueError):
-        return ZoneInfo('UTC')
 
 
 def _items(value, maximum):

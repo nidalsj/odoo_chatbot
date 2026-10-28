@@ -1,3 +1,5 @@
+import re
+
 from odoo import fields
 
 from .date_resolver import PERIOD_TOKENS
@@ -11,6 +13,35 @@ MODEL_HINTS = {
     'sale.order': "Confirmed sales orders have state 'sale'. Quotations are 'draft' or 'sent'.",
     'crm.lead': "The 'type' field separates leads from opportunities.",
 }
+
+TOPIC_STEMS = {
+    'sale.order': ('sale', 'quotation', 'revenue', 'sold'),
+    'purchase.order': ('purchase', 'vendor', 'supplier', 'procure', 'rfq'),
+    'account.move': ('invoice', 'bill', 'payment', 'paid', 'overdue', 'receivable', 'payable', 'credit note'),
+    'res.partner': ('customer', 'contact', 'partner', 'client', 'vendor', 'supplier'),
+    'product.product': ('product', 'item', 'sku', 'price'),
+    'pos.order': ('pos', 'point of sale', 'cashier', 'register'),
+    'crm.lead': ('lead', 'opportunit', 'pipeline', 'crm', 'prospect'),
+}
+
+MAX_PROMPT_MODELS = 3
+
+def select_schema(question, schema):
+    """Keep only the models the question seems to be about, to save tokens on
+    free tiers. Falls back to every model when nothing matches."""
+    text = ' '.join(re.findall(r'[a-z0-9]+', question.lower()))
+
+    def score(model_name, info):
+        stems = set(TOPIC_STEMS.get(model_name, ()))
+        for word in re.findall(r'[a-z]{4,}', info['label'].lower()):
+            if word not in ('order', 'orders'):   # too generic: matches several models
+                stems.add(word.rstrip('s'))
+        return sum(1 for stem in stems if re.search(r'\b' + re.escape(stem), text))
+
+    scores = {name: score(name, info) for name, info in schema.items()}
+    ranked = sorted(schema, key=lambda name: -scores[name])
+    chosen = [name for name in ranked if scores[name] > 0][:MAX_PROMPT_MODELS]
+    return {name: schema[name] for name in chosen} if chosen else schema
 
 _INSTRUCTIONS = """You turn questions about business data into a JSON query spec. Reply with ONE JSON object and nothing else.
 

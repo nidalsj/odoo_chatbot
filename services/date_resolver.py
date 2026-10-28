@@ -1,6 +1,8 @@
 import re
 from datetime import date, datetime, time, timedelta, timezone
 
+from zoneinfo import ZoneInfo
+
 from .errors import QueryError
 
 PERIOD_TOKENS = (
@@ -74,6 +76,15 @@ def resolve_between(start_iso, end_iso):
     if end < start:
         raise QueryError('The end date is before the start date.')
     return start, end + _ONE_DAY
+
+
+def user_tz(env):
+    """User's timezone falling back to UTC"""
+    name = env.context.get('tz') or env.user.tz or 'UTC'
+    try:
+        return ZoneInfo(name)
+    except (KeyError, ValueError):
+        return ZoneInfo('UTC')
 
 
 def to_utc_naive(day, tz):

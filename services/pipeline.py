@@ -1,7 +1,7 @@
 from .config import load_config
 from .json_utils import extract_json
 from .errors import QueryError
-from .prompt_builder import build_system_prompt
+from .prompt_builder import build_system_prompt, select_schema
 from .providers import build_provider
 from .query_executor import execute
 from .query_validator import validate_spec
@@ -25,7 +25,7 @@ def answer_question(env, question, provider=None):
     if not schema:
         raise QueryError('There is no data available to you through the chatbot yet.')
 
-    prompt = build_system_prompt(env, schema, config.max_rows)
+    prompt = build_system_prompt(env, select_schema(question, schema), config.max_rows)
     provider = provider or build_provider(config)
     spec = extract_json(provider.complete(prompt, question, json_mode=True))
 
