@@ -24,9 +24,9 @@ class TestQueryPipeline(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.partner'].create([
-            {'name': 'ZZ Chat Alpha', 'city': 'Delhi', 'autopost_bills': 'never'},
+            {'name': 'ZZ Chat Alpha', 'city': 'Mumbai', 'autopost_bills': 'never'},
             {'name': 'ZZ Chat Beta', 'city': 'Mumbai', 'autopost_bills': 'never'},
-            {'name': 'ZZ Chat Gamma', 'city': 'Bangalore', 'autopost_bills': 'never'},
+            {'name': 'ZZ Chat Gamma', 'city': 'Delhi', 'autopost_bills': 'never'},
         ])
 
     def ask(self, spec, env=None):
@@ -41,7 +41,7 @@ class TestQueryPipeline(TransactionCase):
         })
         self.assertEqual(result['type'], 'table')
         self.assertEqual([c['name'] for c in result['columns']], ['name', 'city'])
-        self.assertEqual(result['rows'], [['ZZ Chat Alpha', 'Delhi'], ['ZZ Chat Beta', 'Mumbai']])
+        self.assertEqual(result['rows'], [['ZZ Chat Alpha', 'Mumbai'], ['ZZ Chat Beta', 'Mumbai']])
         self.assertEqual(result['total'], 3)
         self.assertTrue(result['truncated'])
 

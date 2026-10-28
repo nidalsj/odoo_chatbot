@@ -19,3 +19,15 @@ class ChatbotMessage(models.Model):
     result = fields.Json(string='Result')
     status = fields.Selection([('ok', 'OK'), ('error', 'Error')], default='ok', required=True)
     error_message = fields.Text()
+
+
+    def _to_client_dict(self):
+        self.ensure_one()
+        return {
+            'id': self.id,
+            'role': self.role,
+            'text': self.text or '',
+            'status': self.status,
+            'result': self.result or False,
+            'create_date': fields.Datetime.to_string(self.create_date),
+        }
