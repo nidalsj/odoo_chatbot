@@ -9,6 +9,8 @@ from .result_formatter import format_result
 from .schema import get_schema
 
 MAX_QUESTION_CHARS = 1000
+GREETINGS = {'hi', 'hii', 'hey', 'hello', 'hola', 'hey there', 'namaste', 'good morning', 'good afternoon', 'good evening'}
+GREETING_REPLY = 'How can I help you with your business data? 😊'
 
 
 def answer_question(env, question, provider=None):
@@ -24,6 +26,9 @@ def answer_question(env, question, provider=None):
     schema = get_schema(env)
     if not schema:
         raise QueryError('There is no data available to you through the chatbot yet.')
+    
+    if question.lower().strip(' !.?,') in GREETINGS:
+        return {'spec': {'intent': 'greeting'}, 'result': {'type': 'message', 'text': GREETING_REPLY}}
 
     prompt = build_system_prompt(env, select_schema(question, schema), config.max_rows)
     provider = provider or build_provider(config)

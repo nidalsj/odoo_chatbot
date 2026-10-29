@@ -5,6 +5,7 @@ from .date_resolver import resolve_between, resolve_period, to_utc_naive, user_t
 from .errors import QueryError
 
 UNREADABLE = "I couldn't understand that request. Could you rephrase it?"
+UNSUPPORTED_REPLY = 'I can only answer questions about the available business data.'
 NOT_AVAILABLE = "That data isn't available to you, or it isn't enabled for the chatbot."
 
 OP_ALIASES = {
@@ -41,10 +42,10 @@ def validate_spec(env, spec, schema, max_rows):
         raise QueryError(UNREADABLE)
     intent = str(spec.get('intent', '')).lower()
 
-    if intent in ('clarify', 'unsupported'):
-        default = ('Could you give me a bit more detail?' if intent == 'clarify'
-                   else 'I can only answer questions about the data in this database.')
-        text = str(spec.get('message') or '').strip()[:500] or default
+    if intent == 'unsupported':
+        return ValidatedQuery(intent='message', message=UNSUPPORTED_REPLY)
+    if intent == 'clarify':
+        text = str(spec.get('message') or '').strip()[:500] or 'Could you give me a bit more detail?'
         return ValidatedQuery(intent='message', message=text)
     if intent not in ('list', 'count', 'aggregate'):
         raise QueryError(UNREADABLE)

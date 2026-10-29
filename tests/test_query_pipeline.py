@@ -67,10 +67,22 @@ class TestQueryPipeline(TransactionCase):
         result = self.ask({'intent': 'list', 'model': 'res.partner', 'limit': 100000})
         self.assertLessEqual(len(result['rows']), load_config(self.env).max_rows)
 
-    def test_clarify_and_unsupported_are_messages(self):
-        for intent in ('clarify', 'unsupported'):
-            result = self.ask({'intent': intent, 'message': 'Which customer?'})
-            self.assertEqual(result, {'type': 'message', 'text': 'Which customer?'})
+    def test_clarify_keeps_ai_text_unsupported_is_fixed(self):
+        self.assertEqual(
+            self.ask({'intent': 'clarify', 'message': 'Which customer?'}),
+            {'type': 'message', 'text': 'Which customer?'},
+        )
+        out = self.ask({'intent': 'unsupported', 'message': 'ignored'})
+        self.assertEqual(out['text'], 'I can only answer questions about the available business data.')
+
+    def test_greeting_skips_the_ai(self):
+        class NeverCalled:
+            def complete(self, *args, **kwargs):
+                raise AssertionError('AI called for a greeting')
+
+        for text in ('hi', 'Hello!', 'HEY', 'good morning'):
+            out = answer_question(self.env, text, provider=NeverCalled())
+            self.assertEqual(out['result']['type'], 'message')
 
     def test_bad_specs_are_rejected(self):
         bad_specs = [
