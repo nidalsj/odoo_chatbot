@@ -6,9 +6,7 @@
 
 Ask questions about your Odoo data in plain English and get the answer back as a clean table. Built for **Odoo 20**, it runs on **free AI tiers** (Groq, Google Gemini, OpenRouter, or any OpenAI-compatible server) and respects Odoo's own access rights, record rules and multi-company rules.
 
-![Demo](docs/screenshots/demo.gif)
-
-> *"Show me the top 10 sales orders this month"*, *"How many contacts were created today?"*, *"Total sales by customer last month"*
+<img width="1918" height="958" alt="Image" src="https://github.com/user-attachments/assets/c240269c-b094-4ffc-8124-de6f7bf5b38d" />
 
 ## Features
 
@@ -22,16 +20,6 @@ Ask questions about your Odoo data in plain English and get the answer back as a
 - **Bring your own free AI.** One adapter covers Groq, Gemini (via its OpenAI-compatible endpoint), OpenRouter and custom servers. Switch provider in Settings, no code changes.
 - **Built-in connection test.** A **Test Connection** button validates your key, model ID and base URL, and plays Odoo's rainbow animation when it works.
 - **Free-quota protection.** A per-user daily question cap, trimmed prompts (only the relevant models are sent to the AI) and instant replies to greetings keep you inside free-tier limits.
-
-## Screenshots
-
-| Chat with a table result | Sidebar and conversations |
-|---|---|
-| ![Chat](docs/screenshots/chat.png) | ![Sidebar](docs/screenshots/sidebar.png) |
-
-| Settings and Test Connection | Mobile layout |
-|---|---|
-| ![Settings](docs/screenshots/settings.png) | ![Mobile](docs/screenshots/mobile.png) |
 
 ## How it works
 
@@ -72,32 +60,6 @@ Letting a model write and run SQL bypasses Odoo's access rights, record rules an
 **What is sent to the AI provider:** the user's question plus the labels and selection options of the models and fields that user may read. **Record data is never sent.** Free tiers may use inputs to improve their models, so check your provider's terms before using real business questions.
 
 One deliberate detail: the *name* of a related record (for example a customer on an order) is displayed even when the user cannot open that record, which matches how Odoo's own interface behaves.
-
-## Requirements
-
-- Odoo 20 (Community or Enterprise)
-- Python 3.12+
-- A free API key from Groq, Google AI Studio or OpenRouter
-- Odoo apps this module depends on: Invoicing, Sales, Purchase, Inventory, CRM (installed automatically as dependencies)
-
-## Installation
-
-1. Clone the repository inside your custom addons path:
-
-   ```bash
-   cd /path/to/custom_addons
-   git clone https://github.com/nidalsj/odoo_dashboard.git
-   ```
-
-2. Make sure the folder containing it is listed in `addons_path` in your `odoo.conf`.
-
-3. Restart Odoo, open **Apps**, click **Update Apps List**, search for **Odoo AI Chatbot** and install it. Or install from the command line:
-
-   ```bash
-   ./odoo-bin -c odoo.conf -d <database> -i odoo_chatbot --stop-after-init
-   ```
-
-All internal users get access to the chatbot automatically. Administrators also get the **Chatbot Manager** role, which lets them edit the list of queryable models.
 
 ## Configuration
 
@@ -147,47 +109,6 @@ Open the **AI Chatbot** app and type a question. Examples:
 - The **trash icon** next to the input deletes the current chat after a confirmation.
 - Greetings get an instant reply without calling the AI, and questions unrelated to your data get a fixed polite refusal.
 
-### Queryable models
-
-The registry is editable under **AI Chatbot → Configuration → Allowed Models** (managers only). Apps that are not installed are skipped automatically.
-
-| Model | Notes |
-|---|---|
-| Sales Orders (`sale.order`) | |
-| Purchase Orders (`purchase.order`) | |
-| Invoices and Journal Entries (`account.move`) | |
-| Contacts (`res.partner`) | |
-| Products (`product.product`) | |
-| POS Orders (`pos.order`) | Only when Point of Sale is installed |
-| CRM Leads and Opportunities (`crm.lead`) | |
-
-Only stored fields of simple types are available (text, numbers, amounts, dates, booleans, selections and many2one links).
-
-## Project structure
-
-```
-odoo_chatbot/
-├── __manifest__.py
-├── models/            conversation, message, allowed-model registry, settings
-├── services/          plain Python, unit-testable core
-│   ├── providers/     base + OpenAI-compatible HTTP adapter
-│   ├── config.py      reads saved settings
-│   ├── schema.py      what the current user may query
-│   ├── prompt_builder.py
-│   ├── date_resolver.py
-│   ├── query_validator.py
-│   ├── query_executor.py
-│   ├── result_formatter.py
-│   ├── json_utils.py
-│   ├── errors.py
-│   └── pipeline.py    question -> answer
-├── security/          groups and ir.access rules
-├── data/              default allowed models
-├── views/             settings, menus, client action, model registry
-├── static/src/        Owl 3 frontend (action, sidebar, messages, table, input bar)
-└── tests/             unit and integration tests
-```
-
 ## Running the tests
 
 The tests use a fake LLM, so they need no API key and use no quota.
@@ -218,16 +139,6 @@ They cover date resolution, the validator (including malicious and malformed spe
 | "The AI gave an answer I couldn't use" or an empty answer | Reasoning models spend tokens thinking before they answer. Raise **Max Tokens** (for example to 2048) or pick a non-reasoning model |
 | "That data isn't available to you" | The model is disabled in the registry, or your user has no read access to it |
 | Red "Style error" banner after editing SCSS | Odoo compiles SCSS with Sass, which cannot mix units inside `min()`, `max()` or `clamp()`. Use `width` plus `max-width` instead |
-
-## Odoo 20 notes
-
-This module was written against Odoo 20 and handles several changes from earlier versions:
-
-- Security uses a single `security/ir.access.csv` (operations plus optional record domain) instead of `ir.model.access.csv` and `ir_rules.xml`, and groups hang off a group privilege.
-- `ir.config_parameter` uses typed getters (`get_str`, `get_int`, ...) instead of `get_param` and `set_param`.
-- The frontend uses Owl 3: `proxy` and `signal` for state, `useProps` for props, signal refs, and templates that reach the component through `this.`.
-- SQL constraints are declared with `models.Constraint`.
-- Access checks use `has_access` and `check_access`.
 
 ## Author
 
