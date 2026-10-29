@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="odoo_chatbot.Sidebar">
+        <aside class="o_chatbot_sidebar" t-att-class="{'o_chatbot_sidebar--open': this.props.isOpen}">
+            <div class="o_chatbot_sidebar_header">
+                <button type="button" class="o_chatbot_icon_btn" title="Hide conversations"
+                        t-on-click="() => this.props.onClose()">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/>
+                    </svg>
+                </button>
+                <button type="button" class="o_chatbot_icon_btn" title="New chat"
+                        t-att-disabled="this.props.busy" t-on-click="() => this.props.onNew()">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                         stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="o_chatbot_sidebar_list">
+                <div t-if="this.props.loading" class="o_chatbot_hint">Loading…</div>
+                <div t-elif="!this.props.conversations.length" class="o_chatbot_hint">No conversations yet.</div>
+                <t t-foreach="this.groups" t-as="group" t-key="group.key">
+                    <div class="o_chatbot_group_label" t-out="group.label"/>
+                    <button t-foreach="group.items" t-as="conv" t-key="conv.id" type="button"
+                            class="o_chatbot_conv"
+                            t-att-class="{'o_chatbot_conv--active': conv.id === this.props.activeId}"
+                            t-att-disabled="this.props.busy"
+                            t-on-click="() => this.props.onSelect(conv.id)"
+                            t-out="conv.name"/>
+                </t>
+            </div>
+        </aside>
+    </t>
+</template>

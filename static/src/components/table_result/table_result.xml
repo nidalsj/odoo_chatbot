@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="odoo_chatbot.TableResult">
+        <div class="o_chatbot_result">
+            <div t-if="this.props.result.summary" class="o_chatbot_summary" t-out="this.props.result.summary"/>
+            <div t-if="this.props.result.rows.length" class="o_chatbot_table_wrap">
+                <table class="o_chatbot_table">
+                    <thead>
+                        <tr>
+                            <th t-foreach="this.props.result.columns" t-as="col" t-key="col_index"
+                                t-att-class="col.align === 'right' ? 'text-end' : ''" t-out="col.label"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="this.props.result.rows" t-as="row" t-key="row_index">
+                            <td t-foreach="row" t-as="cell" t-key="cell_index"
+                                t-att-class="this.props.result.columns[cell_index].align === 'right' ? 'text-end' : ''"
+                                t-out="cell"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</template>

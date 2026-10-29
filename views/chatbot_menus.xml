@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem id="menu_chatbot_root" name="AI Chatbot" 
+        web_icon="odoo_chatbot,static/description/icon.png"
+        groups="odoo_chatbot.group_chatbot_user" sequence="60"/>
 
-    
+    <menuitem id="menu_chatbot_chat" name="Chat" parent="menu_chatbot_root"
+        action="chatbot_client_action" sequence="10"/>
 
+    <menuitem id="menu_chatbot_config" name="Configuration" parent="menu_chatbot_root"
+        groups="odoo_chatbot.group_chatbot_manager" sequence="90"/>
+        
+    <menuitem id="menu_chatbot_models" name="Allowed Models" parent="menu_chatbot_config"
+        action="chatbot_allowed_model_action" sequence="10"/>
 </odoo>

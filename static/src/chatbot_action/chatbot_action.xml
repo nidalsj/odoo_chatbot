@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="odoo_chatbot.ChatbotAction">
+        <div class="o_chatbot">
+            <div t-if="this.state.isMobile and this.state.sidebarOpen"
+                 class="o_chatbot_backdrop" t-on-click="() => this.toggleSidebar()"/>
+            <Sidebar
+                conversations="this.state.conversations"
+                activeId="this.state.activeId"
+                isOpen="this.state.sidebarOpen"
+                busy="this.state.sending"
+                loading="this.state.loading"
+                onSelect="(id) => this.selectConversation(id)"
+                onNew="() => this.newChat()"
+                onClose="() => this.toggleSidebar()"/>
+            <div class="o_chatbot_main">
+                <div t-if="!this.state.sidebarOpen" class="o_chatbot_topbar">
+                    <button type="button" class="o_chatbot_icon_btn" title="Show conversations"
+                            t-on-click="() => this.toggleSidebar()">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18M3 12h18M3 18h18"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="o_chatbot_icon_btn" title="New chat"
+                            t-att-disabled="this.state.sending" t-on-click="() => this.newChat()">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                    </button>
+                    <span class="o_chatbot_topbar_title">Odoo AI Chatbot</span>
+                </div>
+                <div t-if="this.state.notice" class="alert alert-warning o_chatbot_notice" role="alert">
+                    <span t-out="this.state.notice"/>
+                    <button type="button" class="btn-close" aria-label="Close"
+                            t-on-click="() => this.dismissNotice()"/>
+                </div>
+                <MessageList messages="this.state.messages" sending="this.state.sending"/>
+                <InputBar
+                    sending="this.state.sending"
+                    canDelete="this.state.messages.length > 0"
+                    onSend="(text) => this.send(text)"
+                    onDelete="() => this.deleteCurrent()"/>
+            </div>
+        </div>
+    </t>
+</template>

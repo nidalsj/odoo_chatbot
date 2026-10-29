@@ -38,12 +38,4 @@
         <field name="res_model">chatbot.allowed.model</field>
         <field name="view_mode">list,form</field>
     </record>
-
-    <!-- Temporary. We move it under the chatbot root menu -->
-    <menuitem id="chatbot_allowed_model_menu"
-              name="Chatbot Models"
-              parent="base.menu_custom"
-              action="chatbot_allowed_model_action"
-              groups="odoo_chatbot.group_chatbot_manager"
-              sequence="50"/>
 </odoo>
