@@ -4,16 +4,24 @@
 [![License: LGPL-3](https://img.shields.io/badge/license-LGPL--3-blue.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB)](https://www.python.org)
 
-Ask questions about your Odoo data in plain English and get the answer back as a clean table. Built for **Odoo 20**, it runs on **free AI tiers** (Groq, Google Gemini, OpenRouter, or any OpenAI-compatible server) and respects Odoo's own access rights, record rules and multi-company rules.
+Ask questions about your Odoo data in plain English and get the answer back as a clean table. Built for **Odoo 20**, it runs on **free AI tiers** and respects Odoo's own access rights, record rules and multi-company rules.
 
+**Groq is recommended for speed.** You can get a key from [Groq Console](https://console.groq.com/keys) 
+
+Try Gemini or OpenRouter if you need higher token-per-minute (TPM) limits.
+
+**Chat Interface:**
 <img width="1918" height="958" alt="Image" src="https://github.com/user-attachments/assets/c240269c-b094-4ffc-8124-de6f7bf5b38d" />
+
+**Module Settings View:**
+<img width="1918" height="958" alt="Image" src="https://github.com/user-attachments/assets/7ca4b9ed-8e7a-4eba-9e2d-d8fc8ab89447" />
 
 ## Features
 
 - **Natural-language queries.** No syntax to learn. Ask for lists, counts, totals, averages and groupings.
 - **Filters that understand time.** "this month", "last week", "April", "last 30 days" are resolved in the user's own timezone. Amount, quantity, status and partner filters work too ("invoices above 1000", "orders from Deco").
 - **Formatted table output.** Column headers use Odoo field labels, amounts are formatted with their currency, dates follow the user's language, and numbers are right-aligned. Long results show a "Showing 10 of 143" summary.
-- **Secure by design.** Every query runs as the logged-in user through the ORM, so access rights, record rules and the company switcher apply automatically. See [Security](#security).
+- **Secure by design.** Every query runs as the logged-in user through the ORM, so access rights, record rules and the company switcher apply automatically.
 - **Multiple conversations.** A sidebar groups chats under Today, Yesterday, Previous 7 days and Older. Chats are titled from the first question and can be deleted from the input bar.
 - **Multi-user and multi-company.** Conversations are private to their owner and tied to a company. Results follow the companies selected in the switcher.
 - **Responsive.** On phones the sidebar becomes a slide-out drawer and wide tables scroll sideways.
@@ -39,7 +47,7 @@ flowchart LR
 4. **Executor.** Runs the validated query through the ORM as the current user (never `sudo`), inside a savepoint.
 5. **Formatter.** Turns the result into a JSON-safe table that the Owl frontend renders.
 
-### Why the AI never writes SQL
+### Why the AI never writes SQL directly
 
 Letting a model write and run SQL bypasses Odoo's access rights, record rules and multi-company rules, so any user could read data they should not see. It also opens the door to injection and expensive queries. Instead, the AI only *describes* what it wants in a constrained JSON format, and Python decides whether that is allowed and how to run it.
 
@@ -91,24 +99,6 @@ Free-tier model IDs change often. The preset models are only suggestions: if one
 | Max Rows Returned | 50 | Row cap per answer (maximum 200) |
 | Daily Requests per User | 30 | Protects your free quota. 0 means unlimited |
 
-## Using it
-
-Open the **AI Chatbot** app and type a question. Examples:
-
-| Use case | Example question |
-|---|---|
-| Sales | Show me the top 10 sales orders this month |
-| Sales | Total sales by customer last month |
-| Procurement | List all purchase orders from last week |
-| Accounting | Show invoices above 1000 for April |
-| Daily check | How many sales were created today? |
-| Contacts | How many contacts per country? |
-
-- **Enter** sends, **Shift+Enter** adds a new line.
-- The **+** button starts a new chat. It is saved when you send the first question, so empty chats never pile up.
-- The **trash icon** next to the input deletes the current chat after a confirmation.
-- Greetings get an instant reply without calling the AI, and questions unrelated to your data get a fixed polite refusal.
-
 ## Running the tests
 
 The tests use a fake LLM, so they need no API key and use no quota.
@@ -142,7 +132,7 @@ They cover date resolution, the validator (including malicious and malformed spe
 
 ## Author
 
-**Nidal SJ**. [Portfolio](https://nidalsj.vercel.app) · [GitHub](https://github.com/nidalsj)
+**Nidal SJ** · [Portfolio](https://nidalsj.vercel.app) · [GitHub](https://github.com/nidalsj)
 
 ## License
 
