@@ -10,14 +10,14 @@
                     <div class="o_chatbot_bubble" t-out="msg.text"/>
                 </div>
                 <div t-else="" class="o_chatbot_row o_chatbot_row--bot">
-                    <div class="o_chatbot_bot_label">AI Bot</div>
+                    <div class="o_chatbot_bot_label">Chatbot</div>
                     <div t-if="msg.status === 'error'" class="o_chatbot_error" t-out="msg.text"/>
                     <TableResult t-elif="msg.result and msg.result.type === 'table'" result="msg.result"/>
                     <div t-else="" class="o_chatbot_text" t-out="msg.text"/>
                 </div>
             </t>
             <div t-if="this.props.sending" class="o_chatbot_row o_chatbot_row--bot">
-                <div class="o_chatbot_bot_label">AI Bot</div>
+                <div class="o_chatbot_bot_label">Chatbot</div>
                 <div class="o_chatbot_typing"><span/><span/><span/></div>
             </div>
         </div>
